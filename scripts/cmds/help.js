@@ -1,105 +1,91 @@
 const { getPrefix } = global.utils;
 const { commands, aliases } = global.GoatBot;
 
-function fancy(text) {
-  const map = {
-    A: '𝒜', B: 'ℬ', C: '𝒞', D: '𝒟', E: 'ℰ', F: 'ℱ',
-    G: '𝒢', H: 'ℋ', I: 'ℐ', J: '𝒥', K: '𝒦', L: 'ℒ',
-    M: 'ℳ', N: '𝒩', O: '𝒪', P: 'ℙ', Q: '𝒬', R: 'ℛ',
-    S: '𝒮', T: '𝒯', U: '𝒰', V: '𝒱', W: '𝒲', X: '𝒳',
-    Y: '𝒴', Z: '𝒵',
-    a: '𝒶', b: '𝒷', c: '𝒸', d: '𝒹', e: 'ℯ', f: '𝒻',
-    g: 'ℊ', h: '𝒽', i: '𝒾', j: '𝒿', k: '𝓀', l: '𝓁',
-    m: '𝓂', n: '𝓃', o: 'ℴ', p: '𝓅', q: '𝓆', r: '𝓇',
-    s: '𝓈', t: '𝓉', u: '𝓊', v: '𝓋', w: '𝓌', x: '𝓍',
-    y: '𝓎', z: '𝓏'
+function applyFont(text) {
+  const fontMap = {
+    'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵',
+    'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻',
+    'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁',
+    'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇',
+    'Y': '𝚈', 'Z': '𝚉',
+    'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏',
+    'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕',
+    'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛',
+    's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡',
+    'y': '𝚢', 'z': '𝚣'
   };
-  return text.split('').map(c => map[c] || c).join('');
+  return text.split('').map(c => fontMap[c] || c).join('');
 }
-
-const catEmoji = {
-  system: "⚙️",
-  fun: "🎉",
-  anime: "🌸",
-  economy: "💰",
-  game: "🎮",
-  image: "🖼️",
-  ai: "🤖",
-  owner: "👑",
-  media: "📀",
-  love: "💖",
-  group: "👥",
-  contact: "📞",
-  tools: "🛠️",
-  youtube: "🎵",
-  default: "📖"
-};
 
 module.exports = {
   config: {
     name: "help",
-    aliases: ["h"],
     version: "2.0",
-    author: "Celestin 🔮",
+    author: "Camille 💙",
+    countDown: 5,
     role: 0,
-    category: "system",
-    guide: "{pn} [commande]"
+    shortDescription: { en: "View commands list" },
+    longDescription: { en: "Show all commands and details" },
+    category: "info",
+    guide: { en: "{pn} [command_name]" },
+    priority: 1
   },
 
-  onStart: async ({ message, args, event, role }) => {
+  onStart: async ({ message, args, event, threadsData, role }) => {
     const prefix = await getPrefix(event.threadID);
 
+    // Si pas d'argument : afficher toutes les commandes
     if (!args[0]) {
-      const cats = {};
+      const categories = {};
+      let msg = `╔════════════════════╗\n║ 🌿 HELP. 𝙲𝙾𝙼𝙼𝙰𝙽𝙳𝚂 🌿 ║\n╠════════════════════╣\n`;
+
       for (const [name, cmd] of commands) {
         if (cmd.config.role > role) continue;
-        const cat = cmd.config.category || "OTHER";
-        if (!cats[cat]) cats[cat] = [];
-        cats[cat].push(name);
+        const cat = cmd.config.category || "NO CATEGORY";
+        if (!categories[cat]) categories[cat] = [];
+        categories[cat].push(name);
       }
 
-      let screen = "";
-      for (const cat of Object.keys(cats).sort()) {
-        const emoji = catEmoji[cat.toLowerCase()] || catEmoji.default;
-        screen += `╔══════════════════════╗\n`;
-        screen += `║ ${emoji} ${fancy(cat.toUpperCase())} ║\n`;
-        screen += `╚══════════════════════╝\n`;
-        cats[cat].sort().forEach(c => {
-          screen += `• ${fancy(c)}\n`;
-        });
-        screen += "\n";
+      for (const cat of Object.keys(categories).sort()) {
+        msg += `╔━━═[ ⚡ ${applyFont(cat.toUpperCase())} ⚡ ]══╗\n`;
+        for (const name of categories[cat].sort()) {
+          msg += `┃ ✦ ${applyFont(name)}\n`;
+        }
+        msg += `╚══════════════════╝\n`;
       }
 
-      screen += `🔥 TOTAL COMMANDES : ${commands.size}\n`;
-      screen += `💚 PREFIX : ${prefix}`;
-
-      const sent = await message.reply(screen);
-      setTimeout(() => message.unsend(sent.messageID), 30000);
+      msg += `╔════════════════════╗\n║ 🌿 TOTAL COMMANDS: ${commands.size} ║\n║ 🥷🏻 PREFIX: ${prefix} ║\n╚════════════════════╝`;
+      msg += `\n💬 Type "${prefix}help <command>" to see details.\n`;
+      await message.reply(msg);
       return;
     }
 
-    const name = args[0].toLowerCase();
-    const cmd = commands.get(name) || commands.get(aliases.get(name));
-
-    if (!cmd) {
-      const sent = await message.reply(`❌ COMMANDE INTROUVABLE`);
-      setTimeout(() => message.unsend(sent.messageID), 15000);
+    // Si un argument : afficher les détails d'une commande
+    const commandName = args[0].toLowerCase();
+    const command = commands.get(commandName) || commands.get(aliases.get(commandName));
+    if (!command) {
+      await message.reply(`╔═══[ ❌ ERROR ❌ ]═══╗\n┃ Command not found\n╚══════════════════╝`);
       return;
     }
 
-    const cfg = cmd.config;
-    const usage = (cfg.guide?.replace("{pn}", prefix) || `${prefix}${cfg.name}`);
+    const cfg = command.config;
+    const roleText = {0:"All users",1:"Group admins",2:"Bot admins"}[cfg.role] || "Unknown";
+    const usage = (cfg.guide?.en || "{pn} " + cfg.name).replace("{pn}", prefix);
 
-    const detail = `╔══════════════════════╗
-║ 🔹 ${fancy(cfg.name.toUpperCase())} 🔹
-╠══════════════════════╣
-║ Version : ${cfg.version}
-║ Role : ${cfg.role}
-║ Catégorie : ${cfg.category || "AUTRE"}
-║ Usage : ${usage}
-╚══════════════════════╝`;
+    const resp = `╔═══[ ⚽ ${applyFont(cfg.name.toUpperCase())} ⚽ ]══╗
+┃ 💠 Version: ${cfg.version || "1.0"}
+┃ 💠 Author: ${cfg.author}
+┃ 💠 Role: ${roleText}
+┃ 💠 Cooldown: ${cfg.countDown || 2}s
+┃
+┃ 💬 Description:
+┃ ${cfg.longDescription?.en || "No description"}
+┃
+┃ 📝 Usage:
+┃ ${usage}
+╚══════════════════╝`;
 
-    const sent = await message.reply(detail);
-    setTimeout(() => message.unsend(sent.messageID), 20000);
+    await message.reply(res
+                        p);
   }
 };
