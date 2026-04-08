@@ -9,23 +9,14 @@ module.exports = {
 	},
 
 	langs: {
-		vi: {
-			session1: "sáng",
-			session2: "trưa",
-			session3: "chiều",
-			session4: "tối",
-			leaveType1: "tự rời",
-			leaveType2: "bị kick",
-			defaultLeaveMessage: "{userName} đã {type} khỏi nhóm"
-		},
-		en: {
-			session1: "morning",
-			session2: "noon",
-			session3: "afternoon",
-			session4: "evening",
-			leaveType1: "left",
-			leaveType2: "was kicked from",
-			defaultLeaveMessage: "{userName} {type} the group"
+		fr: {
+			session1: "matin",
+			session2: "midi",
+			session3: "après-midi",
+			session4: "soir",
+			leaveType1: "a quitté",
+			leaveType2: "a été expulsé",
+			defaultLeaveMessage: "{userName} a quitté le groupe"
 		}
 	},
 
@@ -34,22 +25,12 @@ module.exports = {
 			return async function () {
 				const { threadID } = event;
 				const threadData = await threadsData.get(threadID);
-				if (!threadData.settings.sendLeaveMessage)
-					return;
+				if (!threadData.settings.sendLeaveMessage) return;
 				const { leftParticipantFbId } = event.logMessageData;
-				if (leftParticipantFbId == api.getCurrentUserID())
-					return;
-				const hours = getTime("HH");
+				if (leftParticipantFbId == api.getCurrentUserID()) return;
 
 				const threadName = threadData.threadName;
 				const userName = await usersData.getName(leftParticipantFbId);
-
-				// {userName}   : name of the user who left the group
-				// {type}       : type of the message (leave)
-				// {boxName}    : name of the box
-				// {threadName} : name of the box
-				// {time}       : time
-				// {session}    : session
 
 				let { leaveMessage = getLang("defaultLeaveMessage") } = threadData.data;
 				const form = {
@@ -59,21 +40,17 @@ module.exports = {
 					}] : null
 				};
 
-				leaveMessage = leaveMessage
-					.replace(/\{userName\}|\{userNameTag\}/g, userName)
-					.replace(/\{type\}/g, leftParticipantFbId == event.author ? getLang("leaveType1") : getLang("leaveType2"))
-					.replace(/\{threadName\}|\{boxName\}/g, threadName)
-					.replace(/\{time\}/g, hours)
-					.replace(/\{session\}/g, hours <= 10 ?
-						getLang("session1") :
-						hours <= 12 ?
-							getLang("session2") :
-							hours <= 18 ?
-								getLang("session3") :
-								getLang("session4")
-					);
+				// Nouveau message stylé en français avec cadre
+				form.body =
+`🇫🇷━━━━━━━━━━━━━━━━━━━━
+💅 AU REVOIR
+━━━━━━━━━━━━━━━━━━━━
 
-				form.body = leaveMessage;
+⚠️ T’as quitté le groupe… mais soyons honnêtes, t’étais pas vraiment dans le style.
+
+━━━━━━━━━━━━━━━━━
+🌟 Notre devise : “Toujours au top, même quand les autres ne le sont pas.”
+━━━━━━━━━━━━━━━━━━━━`;
 
 				if (leaveMessage.includes("{userNameTag}")) {
 					form.mentions = [{
@@ -92,6 +69,7 @@ module.exports = {
 						.filter(({ status }) => status == "fulfilled")
 						.map(({ value }) => value);
 				}
+
 				message.send(form);
 			};
 	}
