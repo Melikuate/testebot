@@ -6,8 +6,8 @@ const { getPrefix } = global.utils;
 module.exports = {
   config: {
     name: "welcome",
-    version: "2.0",
-    author: "Saimx69x",
+    version: "2.1",
+    author: "Saimx69x x Célestin 🔥",
     category: "events"
   },
 
@@ -34,11 +34,11 @@ module.exports = {
 
       await api.sendMessage(
 `🇫🇷━━━━━━━━━━━━━━━━━━━━
-👑 𝘽𝙊𝙏 𝘼𝘾𝙏𝙄𝙑𝙀́
+🤖 SYSTÈME ACTIVÉ
 ━━━━━━━━━━━━━━━━━━━━
 
-🤖 Système connecté avec succès
-⚡ Intelligence active et prête à servir
+⚡ Connexion établie avec succès
+🧠 Intelligence prête à fonctionner
 
 💠 Préfixe : ${prefix}
 💠 Nom : ${nickNameBot || "Bot"}
@@ -51,11 +51,11 @@ https://github.com/celestincelestinolua-cmyk/Flemme
 https://www.facebook.com/mike.lumema
 
 ━━━━━━━━━━━━━━━━━━━━
-💬 Tape ${prefix}help pour découvrir mes commandes
+💬 Tape ${prefix}help pour voir mes commandes
 🕒 ${timeStr}
 
 ━━━━━━━━━━━━━━━━━━━━
-👑 Système conçu par Célestin • Intelligence active
+🔥 Bot opérationnel • Prêt à servir
 ━━━━━━━━━━━━━━━━━━━━`,
         threadID
       );
@@ -91,22 +91,21 @@ https://www.facebook.com/mike.lumema
         await api.sendMessage({
           body:
 `🇫🇷━━━━━━━━━━━━━━━━━━━━
-👑 𝘽𝙄𝙀𝙉𝙑𝙀𝙉𝙐𝙀 𝘿𝘼𝙉𝙎 𝙇𝙀 𝙂𝙍𝙊𝙐𝙋𝙀
+✨ BIENVENUE
 ━━━━━━━━━━━━━━━━━━━━
 
-🎉 Salut ${fullName} !
-Tu viens d’entrer dans :
+👋 Salut ${fullName},
+Bienvenue dans :
 🏷️ ${groupName}
 
-👥 Membres actuels : ${memberCount}
-⚡ Tu fais maintenant partie de l’élite 💎
+👥 Membres : ${memberCount}
+💎 Tu fais maintenant partie du groupe
 
 ━━━━━━━━━━━━━━━━━━━━
-💬 Respect • Ambiance • Activité
-🔥 Profite et fais-toi remarquer !
+💬 Respect • Bonne ambiance • Participation
+🔥 Profite et fais ta place !
 
 ━━━━━━━━━━━━━━━━━━━━
-👑 Système conçu par Célestin • Intelligence active
 🕒 ${timeStr}
 ━━━━━━━━━━━━━━━━━━━━`,
           attachment: fs.createReadStream(imagePath),
