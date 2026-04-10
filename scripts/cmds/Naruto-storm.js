@@ -1,8 +1,8 @@
 const characters = [
   {
-    name: "ʚʆɞ𝕔é𝕝𝕖𝕤𝕥𝕚𝕟 𝕥𝕙𝕖 𝕜𝕚𝕟𝕘ʚʆɞ ネ",
-    power: 89,
-    basic: "pouvoir de Mark Zuckerberg",
+    name: "Vampire",
+    power: 500,
+    basic: "rapidité lunaire",
     ultimate: " attaque +coup  Géant 🌪️"
   },
   {
@@ -367,9 +367,9 @@ const gameState = {};
 
 module.exports = {
   config: { 
-    name: "naruto-storm", 
+    name: "storm", 
     version: "4.2",
-    author: "Delfa •|• ꗇ︱Blẳȼk 义 ",
+    author: "tesla ",
     role: 0,
     category: "game",
     shortDescription: "Jeu Naruto ultime",
